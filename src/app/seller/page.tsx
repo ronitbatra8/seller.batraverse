@@ -1339,14 +1339,14 @@ function PayoutsTab({ payouts, stats }: { payouts: Payout[]; stats: Stats | null
   });
 
   const PAYOUT_GRADIENTS: Record<string, string> = {
-    pending: "from-amber-500/15 to-amber-500/5",
-    paid: "from-emerald-500/15 to-emerald-500/5",
-    voided: "from-red-500/15 to-red-500/5",
+    pending: "from-amber-500/20 to-amber-500/10",
+    paid: "from-emerald-500/20 to-emerald-500/10",
+    voided: "from-red-500/20 to-red-500/10",
   };
   const PAYOUT_BORDERS: Record<string, string> = {
-    pending: "border-amber-500/25",
-    paid: "border-emerald-500/25",
-    voided: "border-red-500/25",
+    pending: "border-amber-500/30",
+    paid: "border-emerald-500/30",
+    voided: "border-red-500/30",
   };
   const PAYOUT_LABEL_STYLE: Record<string, string> = {
     pending: "text-amber-400 bg-amber-500/10",
@@ -1430,9 +1430,9 @@ function PayoutsTab({ payouts, stats }: { payouts: Payout[]; stats: Stats | null
               return (
                 <div
                   key={pay.id}
-                  className={`bg-dark-900/60 border rounded-2xl overflow-hidden ${PAYOUT_BORDERS[pay.status] || "border-dark-800/50"}`}
+                  className={`bg-gradient-to-br ${PAYOUT_GRADIENTS[pay.status] || "from-dark-900/40 to-dark-900/20"} border ${PAYOUT_BORDERS[pay.status] || "border-dark-800/50"} rounded-2xl overflow-hidden`}
                 >
-                  <div className={`bg-gradient-to-r ${PAYOUT_GRADIENTS[pay.status] || "from-dark-900/40 to-dark-900/20"} px-4 sm:px-6 py-4 flex items-center gap-4`}>
+                  <div className="px-4 sm:px-6 py-4 flex items-center gap-4">
                     <button
                       onClick={() => setExpandedId(isExpanded ? null : pay.id)}
                       className="flex-1 min-w-0 text-left flex items-center gap-4"
@@ -1463,22 +1463,70 @@ function PayoutsTab({ payouts, stats }: { payouts: Payout[]; stats: Stats | null
                   {isExpanded && (
                     <div className="px-4 sm:px-6 pb-6 space-y-4 border-t border-dark-800/30 pt-4">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div className="bg-dark-800/30 rounded-xl p-4 space-y-2">
-                          <h4 className="text-xs text-dark-500 uppercase tracking-wider font-semibold">Payout ID</h4>
+                        <div className="bg-gradient-to-br from-blue-500/10 to-blue-500/5 border border-blue-500/20 rounded-xl p-4 space-y-3">
+                          <h4 className="text-xs text-blue-400 uppercase tracking-wider font-semibold flex items-center gap-2">
+                            Payout ID
+                          </h4>
                           <p className="text-white text-sm font-medium break-all">{pay.id}</p>
                         </div>
-                        <div className="bg-dark-800/30 rounded-xl p-4 space-y-2">
-                          <h4 className="text-xs text-dark-500 uppercase tracking-wider font-semibold">Order Ref</h4>
-                          <p className="text-white text-sm font-medium">{pay.orderRef || pay.orderId}</p>
+                        <div className="bg-gradient-to-br from-gold-500/10 to-gold-500/5 border border-gold-500/20 rounded-xl p-4 space-y-3">
+                          <h4 className="text-xs text-gold-400 uppercase tracking-wider font-semibold flex items-center gap-2">
+                            Payout Details
+                          </h4>
+                          <div className="space-y-2">
+                            <p className="text-white text-sm font-medium">{pay.productName || "Product"}</p>
+                            <p className="text-dark-500 text-xs">Order {pay.orderRef || "#" + pay.orderId.slice(0, 8)}</p>
+                            <div className="flex items-center gap-4 text-xs">
+                              <div>
+                                <span className="text-dark-500">Qty</span>
+                                <span className="text-white ml-1.5 font-medium">{pay.quantity}</span>
+                              </div>
+                              <div className="border-l border-dark-700 h-3" />
+                              <div>
+                                <span className="text-dark-500">Unit price</span>
+                                <span className="text-white ml-1.5 font-medium">{formatPrice(pay.unitPrice)}</span>
+                              </div>
+                              <div className="border-l border-dark-700 h-3" />
+                              <div>
+                                <span className="text-dark-500">Total</span>
+                                <span className="text-gold-400 ml-1.5 font-semibold">{formatPrice(pay.amount)}</span>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <div className="bg-gold-500/5 border border-gold-500/10 rounded-xl p-4 space-y-2">
-                        <h4 className="text-xs text-gold-400 uppercase tracking-wider font-semibold">Details</h4>
+
+                      {Array.isArray(pay.deductions) && pay.deductions.length > 0 && (
+                        <div className="bg-gradient-to-br from-blue-500/10 to-blue-500/5 border border-blue-500/20 rounded-xl p-4 space-y-3">
+                          <h4 className="text-xs text-blue-400 uppercase tracking-wider font-semibold flex items-center gap-2">
+                            Deductions
+                          </h4>
+                          <div className="space-y-2">
+                            {pay.deductions.map((d, i) => (
+                              <div key={i} className="flex flex-wrap items-center justify-between gap-2 text-sm px-3 py-2 rounded-lg bg-dark-900/30">
+                                <span className="text-dark-300">{d.label || "Deduction"}</span>
+                                <span className="flex items-center gap-3">
+                                  <span className="text-red-400/90 font-medium">- {formatPrice(d.amount)}</span>
+                                  {d.createdAt && (
+                                    <span className="text-dark-500 text-xs">
+                                      {new Date(d.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                                    </span>
+                                  )}
+                                </span>
+                              </div>
+                            ))}
+                            <div className="flex items-center justify-between gap-2 px-3 pt-1 text-xs">
+                              <span className="text-dark-400">Net payout now pending</span>
+                              <span className="text-white font-semibold">{formatPrice(pay.amount)}</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="bg-dark-900/60 border border-dark-800/50 rounded-xl p-4 space-y-2">
+                        <h4 className="text-xs text-dark-500 uppercase tracking-wider font-semibold">Status</h4>
                         <p className="text-dark-400 text-xs leading-relaxed">
-                          Quantity: {pay.quantity} | Unit price: {formatPrice(pay.unitPrice)} | Total: {formatPrice(pay.amount)}
-                        </p>
-                        <p className="text-dark-400 text-xs leading-relaxed">
-                          Status: {pay.status} | Created: {new Date(pay.createdAt).toLocaleString("en-IN")}
+                          Status: <span className={pay.status === "paid" ? "text-emerald-400" : pay.status === "voided" ? "text-red-400" : "text-amber-400"}>{pay.status}</span> | Created: {new Date(pay.createdAt).toLocaleString("en-IN")}
                         </p>
                       </div>
                     </div>
@@ -1668,8 +1716,8 @@ function OrdersTab({
     );
   });
 
-  const ORDER_GRADIENTS: Record<string, string> = { pending: "from-amber-500/15 to-amber-500/5", confirmed: "from-sky-500/15 to-sky-500/5", delivered: "from-emerald-500/15 to-emerald-500/5", cancelled: "from-red-500/15 to-red-500/5" };
-  const ORDER_BORDERS: Record<string, string> = { pending: "border-amber-500/25", confirmed: "border-sky-500/25", delivered: "border-emerald-500/25", cancelled: "border-red-500/25" };
+  const ORDER_GRADIENTS: Record<string, string> = { pending: "from-amber-500/20 to-amber-500/10", confirmed: "from-sky-500/20 to-sky-500/10", delivered: "from-emerald-500/20 to-emerald-500/10", cancelled: "from-red-500/20 to-red-500/10" };
+  const ORDER_BORDERS: Record<string, string> = { pending: "border-amber-500/30", confirmed: "border-sky-500/30", delivered: "border-emerald-500/30", cancelled: "border-red-500/30" };
   const STATUS_COLORS: Record<string, string> = { pending: "text-amber-400 bg-amber-500/10 border-amber-500/20", confirmed: "text-sky-400 bg-sky-500/10 border-sky-500/20", delivered: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20", cancelled: "text-red-400 bg-red-500/10 border-red-500/20" };
   const statusFilters = ["pending", "confirmed", "delivered", "cancelled"];
   const statusCounts = (s: string) => orders.filter((o) => o.status === s).length;
@@ -1724,8 +1772,8 @@ function OrdersTab({
             {filtered.map((order) => {
               const isExpanded = expandedOrder === order.id;
               return (
-                <div key={order.id} className={`bg-dark-900/60 border rounded-2xl overflow-hidden ${ORDER_BORDERS[order.status] || "border-dark-800/50"}`}>
-                  <div className="bg-gradient-to-r from-dark-900/40 to-dark-900/20 px-4 sm:px-6 py-4 flex items-center gap-4">
+                <div key={order.id} className={`bg-gradient-to-br ${ORDER_GRADIENTS[order.status] || "from-dark-900/40 to-dark-900/20"} border ${ORDER_BORDERS[order.status] || "border-dark-800/50"} rounded-2xl overflow-hidden`}>
+                  <div className="px-4 sm:px-6 py-4 flex items-center gap-4">
                     <button onClick={() => onToggle(isExpanded ? null : order.id)} className="flex-1 min-w-0 text-left flex items-center gap-4">
                       <div className="flex-1 min-w-0">
                         <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
@@ -1759,23 +1807,23 @@ function OrdersTab({
                   {isExpanded && (
                     <div className="px-4 sm:px-6 pb-6 space-y-4 border-t border-dark-800/30 pt-4">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div className="bg-dark-800/30 rounded-xl p-4 space-y-2">
-                          <h4 className="text-xs text-dark-500 uppercase tracking-wider font-semibold flex items-center gap-2">
+                        <div className="bg-gradient-to-br from-blue-500/10 to-blue-500/5 border border-blue-500/20 rounded-xl p-4 space-y-3">
+                          <h4 className="text-xs text-blue-400 uppercase tracking-wider font-semibold flex items-center gap-2">
                             <User size={12} /> Customer
                           </h4>
                           <p className="text-white text-sm font-medium">{order.shippingName}</p>
                         </div>
-                        <div className="bg-dark-800/30 rounded-xl p-4 space-y-2">
-                          <h4 className="text-xs text-dark-500 uppercase tracking-wider font-semibold flex items-center gap-2">
+                        <div className="bg-gradient-to-br from-green-500/10 to-green-500/5 border border-green-500/20 rounded-xl p-4 space-y-3">
+                          <h4 className="text-xs text-green-400 uppercase tracking-wider font-semibold flex items-center gap-2">
                             <MapPin size={12} /> Shipping Address
                           </h4>
-                          <p className="text-dark-400 text-xs leading-relaxed">
+                          <p className="text-dark-300 text-xs leading-relaxed">
                             {[order.shippingCity, order.shippingState, "India"].filter(Boolean).join(", ")}
                           </p>
                         </div>
                       </div>
 
-                      <div className="bg-gold-500/5 border border-gold-500/10 rounded-xl p-4 space-y-2">
+                      <div className="bg-gradient-to-br from-gold-500/10 to-gold-500/5 border border-gold-500/20 rounded-xl p-4 space-y-3">
                         <h4 className="text-xs text-gold-400 uppercase tracking-wider font-semibold">Items in this order</h4>
                         {order.items?.map((item, idx) => (
                           <div key={idx} className="flex items-center gap-3 p-2 rounded-lg bg-dark-900/30">
