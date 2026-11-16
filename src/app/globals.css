@@ -1,0 +1,401 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-playfair), ui-serif, Georgia, serif;
+}
+
+@theme {
+  /* Maison dark — matte black family */
+  --color-abyss: #050506;
+  --color-onyx: #0b0b0e;
+  --color-graphite: #14141a;
+  --color-smoke: #1e1e24;
+
+  /* Maison dark — gilded gold family */
+  --color-gold: #d4af37;
+  --color-gold-light: #f0d98c;
+  --color-gold-pale: #f8e9bd;
+  --color-gold-deep: #9a7b1e;
+  --color-gold-dark: #6b5316;
+
+  /* Maison dark — ivory cream neutrals */
+  --color-cream: #f7f2e7;
+  --color-cream-dim: #cbc4b4;
+  --color-powder: #fdfbf4;
+
+  /* Status */
+  --color-success: #4ade80;
+  --color-danger: #f87171;
+  --color-info: #7dd3fc;
+
+  /* Light-mode accent — dark glow blue */
+  --color-sapphire: #1e3a8a;
+  --color-sapphire-light: #3b5bdb;
+  --color-sapphire-deep: #172254;
+
+  /* Admin dashboard (e-commerce reference) — neutral dark family */
+  --color-dark-50: #f8f8f8;
+  --color-dark-100: #f0f0f0;
+  --color-dark-200: #e4e4e7;
+  --color-dark-300: #d4d4d8;
+  --color-dark-400: #a1a1aa;
+  --color-dark-500: #71717a;
+  --color-dark-600: #52525b;
+  --color-dark-700: #3f3f46;
+  --color-dark-800: #27272a;
+  --color-dark-900: #18181b;
+  --color-dark-950: #09090b;
+
+  /* Admin dashboard — BATRAVERSE premium gold scale (anchored on --color-gold: #d4af37) */
+  --color-gold-50: #fcf8e9;
+  --color-gold-100: #f8e9bd;
+  --color-gold-200: #f0d98c;
+  --color-gold-300: #e4c668;
+  --color-gold-400: #d8b84e;
+  --color-gold-500: #d4af37;
+  --color-gold-600: #b8942a;
+  --color-gold-700: #9a7b1e;
+  --color-gold-800: #6b5316;
+  --color-gold-900: #4a390e;
+}
+
+:root {
+  --color-background: var(--color-abyss);
+  --color-foreground: var(--color-cream);
+}
+
+/* Light mode — toggled by the lamp's pull cord (`light` class on <html>).
+   Deliberately surgical: only the page background switches to subtle white
+   and the navbar turns into a light frosted blur (see Navbar.tsx). All the
+   maison-dark content — hero scene, marble, gold ink — keeps its drama. */
+:root.light {
+  color-scheme: light;
+}
+
+html.light {
+  background: #fbfaf7;
+}
+
+html.light body {
+  background: #fbfaf7;
+  color: #17140f;
+}
+
+html {
+  background: var(--color-abyss);
+  color-scheme: dark;
+  scrollbar-gutter: stable;
+  --footer-height: 300px;
+}
+
+/* Boot scroll lock */
+html.scroll-locked {
+  overflow: hidden !important;
+}
+
+body {
+  background: var(--color-abyss);
+  color: var(--color-cream);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+::selection {
+  background: rgba(212, 175, 55, 0.35);
+  color: var(--color-powder);
+}
+
+/* Thin, quiet scrollbar — a dark gold blade on hover */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #6b5316 #050506;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #050506;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    #6b5316,
+    #9a7b1e 45%,
+    #6b5316 55%,
+    #3a2f10
+  );
+  border: 2px solid #050506;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    180deg,
+    #9a7b1e,
+    #d4af37 45%,
+    #9a7b1e 55%,
+    #6b5316
+  );
+}
+::-webkit-scrollbar-corner {
+  background: #050506;
+}
+
+/* ---------- Utilities ---------- */
+
+@utility text-gold-gradient {
+  background: linear-gradient(
+    100deg,
+    #f8e9bd 0%,
+    #d4af37 30%,
+    #9a7b1e 52%,
+    #f0d98c 74%,
+    #d4af37 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Deep blue companion for light mode — the VERSE glow */
+@utility text-sapphire-gradient {
+  background: linear-gradient(
+    100deg,
+    #16295e 0%,
+    #1e3a8a 32%,
+    #3b5bdb 55%,
+    #27449c 78%,
+    #16295e 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility hairline-gold {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(212, 175, 55, 0.9),
+    transparent
+  );
+}
+
+@utility glass-panel {
+  background: color-mix(in srgb, var(--color-onyx) 72%, transparent);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(212, 175, 55, 0.14);
+}
+
+@utility gold-glow {
+  filter: drop-shadow(0 0 16px rgba(212, 175, 55, 0.55));
+}
+
+/* ---------- Admin dashboard (e-commerce reference) ---------- */
+
+.page-transition {
+  animation: pageIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes pageIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s ease-out;
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  --bg-page: var(--color-abyss);
+}
+html.light {
+  --bg-page: white;
+}
+
+/* Performance: CSS keyframe animations replacing Framer Motion infinite loops */
+@keyframes sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes swing {
+  0%, 100% { transform: rotate(-2.5deg); }
+  50% { transform: rotate(2.5deg); }
+}
+.anim-sweep { animation: sweep 3.5s ease-in-out infinite; }
+.anim-marquee { animation: marquee 28s linear infinite; }
+.anim-swing { animation: swing 4s ease-in-out infinite; }
+
+/* ---------- Rolls-Royce MENU icon ----------
+   The artwork is RR's own "menu-burger-icon w/ hover" Lottie (16×16) rendered
+   with lottie-web as an inline <svg>. This CSS only sizes the container and the
+   injected svg (RR: 16×18 cell, svg pulled up 1px). */
+.rr-menu-icon {
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  margin-right: 16px;
+  position: relative;
+  width: 16px;
+}
+.rr-menu-icon svg {
+  height: 16px;
+  transform: translateY(-1px);
+  width: 16px;
+}
+
+/* ---------- Boot (splash) animation ----------
+   Adapted from the BATRA TECHNOLOGIES splash: the gilded BV card drops in with
+   squash-and-bounce, the single wordmark "BATRAVERSE" reveals with a single
+   clip-path type-sweep ("BATRA" cream, "VERSE" gold), and a glossy polybag
+   drops in and swings on the letter B. Uses the site's own fonts. Runs once per
+   browser tab on first visit (see BootProvider / sessionStorage). */
+
+/* Step 1: BV card falls from top with squash & bounce (the BT-card equivalent) */
+.ld-bv-fall {
+  opacity: 0;
+  animation: ldBvFall 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both;
+}
+@keyframes ldBvFall {
+  0% { transform: translateY(-40vh) rotate(-10deg); opacity: 0; }
+  6% { opacity: 1; }
+  20% { transform: translateY(10px) scaleX(1.35) scaleY(0.6) rotate(2deg); }
+  30% { transform: translateY(-50px) scaleX(0.9) scaleY(1.12) rotate(-5deg); }
+  40% { transform: translateY(6px) scaleX(1.15) scaleY(0.85) rotate(2deg); }
+  50% { transform: translateY(-18px) scaleX(0.95) scaleY(1.05) rotate(-1deg); }
+  60% { transform: translateY(3px) scaleX(1.05) scaleY(0.95); }
+  68% { transform: translateY(-5px) scaleX(0.98) scaleY(1.02); }
+  76% { transform: translateY(0) scaleX(1) scaleY(1) rotate(0); }
+  85% { transform: translateX(-3px) rotate(-2deg); }
+  92% { transform: translateX(2px) rotate(1deg); }
+  100% { transform: translateX(0) rotate(0); opacity: 1; }
+}
+
+/* BV card squash deformation */
+.ld-bv-squash {
+  --bv-r: 1.25rem;
+  animation: ldBvSquash 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both;
+}
+@media (min-width: 640px) {
+  .ld-bv-squash {
+    --bv-r: 1.75rem;
+  }
+}
+@keyframes ldBvSquash {
+  0% { border-radius: 50%; }
+  20% { border-radius: 18% 18% 42% 42%; }
+  30% { border-radius: 42% 42% 16% 16%; }
+  40% { border-radius: 20% 20% 35% 35%; }
+  50% { border-radius: 35% 35% 20% 20%; }
+  76% { border-radius: var(--bv-r); }
+  100% { border-radius: var(--bv-r); }
+}
+
+/* Step 2: the whole wordmark reveals in one type-sweep animation.
+   Applied to the inner text row only, NOT the outer .ld-wm wrapper, so the
+   bag (a sibling of the text row) is not clipped by the clip-path reveal. */
+.ld-wm-reveal {
+  opacity: 0;
+  animation: ldWmReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+@keyframes ldWmReveal {
+  0% { opacity: 0; clip-path: inset(0 100% 0 0); filter: blur(4px); }
+  100% { opacity: 1; clip-path: inset(0 0% 0 0); filter: blur(0); }
+}
+
+.ld-wm-letter {
+  font-size: clamp(1.9rem, 7vw, 4.25rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+.ld-wm-gold {
+  filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5));
+}
+
+/* Mobile-only boot note — fades up after the wordmark lands */
+.ld-note {
+  opacity: 0;
+  animation: ldNote 1s ease 1.6s both;
+}
+@keyframes ldNote {
+  0% { opacity: 0; transform: translateY(8px); filter: blur(3px); }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+/* Shopping carrier bag hangs on the final E's bottom bar (like a nail),
+   gathering its handles at the hook point (top-center), then swings like a pendulum */
+.ld-bag {
+  opacity: 0;
+  transform-origin: 50% 4%;
+  animation: ldBagDrop 2.4s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both;
+}
+@keyframes ldBagDrop {
+  /* Drop from above — starts far off-screen so it's never visible until it falls */
+  0% { opacity: 0; transform: translateY(-100vh) rotate(-5deg); }
+  6% { opacity: 1; transform: translateY(-100vh) rotate(-5deg); }
+  /* First impact — catch on the bar */
+  18% { transform: translateY(6px) rotate(2deg); }
+  /* Bounce up */
+  26% { transform: translateY(-25px) rotate(-3deg); }
+  /* Second smaller impact */
+  33% { transform: translateY(3px) rotate(1deg); }
+  /* Small bounce */
+  38% { transform: translateY(-8px) rotate(-1.5deg); }
+  /* Settle */
+  43% { transform: translateY(1px) rotate(0.5deg); }
+  47% { transform: translateY(0) rotate(0); }
+  /* Natural pendulum swing — decaying */
+  54% { transform: rotate(6deg); }
+  62% { transform: rotate(-5deg); }
+  70% { transform: rotate(3.5deg); }
+  77% { transform: rotate(-2deg); }
+  83% { transform: rotate(1deg); }
+  88% { transform: rotate(-0.5deg); }
+  93% { transform: rotate(0.2deg); }
+  100% { opacity: 1; transform: rotate(0); }
+}
+
+/* Login page — smaller inputs on phones */
+@media (max-width: 640px) {
+  .login-ui input {
+    padding-top: 0.65rem;
+    padding-bottom: 0.65rem;
+    padding-left: 2.4rem;
+    padding-right: 0.65rem;
+    font-size: 13px;
+    border-radius: 0.6rem;
+  }
+}
+
